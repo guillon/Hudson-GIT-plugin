@@ -144,4 +144,37 @@ public class GitUtils {
 
         return returnNames;
     }
+
+    public static String combineUrls(String baseUrl, String url) {
+        String[] baseStrings = baseUrl.split("/");
+        String[] urlStrings = url.split("/");
+        int baseLen = baseStrings.length;
+        int urlLen = urlStrings.length;
+        int offset = 0;
+        if (baseLen > 0 && baseStrings[baseLen-1].equals(".git"))
+            baseLen--;
+        if (urlLen > 0 && urlStrings[urlLen-1].equals(".git"))
+            urlLen--;
+        while(offset < urlLen && 
+              (urlStrings[offset].equals(".") ||
+               urlStrings[offset].equals(".."))) {
+            if (urlStrings[offset].equals("..") && baseLen > 0) {
+                baseLen--;
+            }           
+            offset++;
+        }
+        String fullUrl = "";
+        String sep = "";
+        if (offset > 0) {
+            for(int i = 0; i < baseLen; i++) {
+                fullUrl += sep + baseStrings[i];
+                sep = "/";
+            }
+        }
+        for(int i = offset; i < urlLen; i++) {
+            fullUrl += sep + urlStrings[i];
+            sep = "/";
+        }
+        return fullUrl;
+    }
 }

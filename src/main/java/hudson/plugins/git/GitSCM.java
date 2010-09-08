@@ -541,6 +541,8 @@ public class GitSCM extends SCM implements Serializable {
             } else if (isSubmodule && line.startsWith("url")) {
                 int index = line.indexOf("=");
                 String refUrl = line.substring(index + 1).trim();
+                refUrl = GitUtils.combineUrls(orig.getURIs().get(0).toString(),
+                                              refUrl);
                 return newRemoteConfig(name, refUrl, orig.getFetchRefSpecs().get(0));
             }
         }
